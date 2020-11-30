@@ -1,7 +1,9 @@
 #include <iostream>
 #include <unistd.h>
 
-#include "fmod.hpp"
+//#include "fmod.hpp"
+
+#include "playSound.h"
 
 int main() {
 
@@ -9,25 +11,13 @@ int main() {
 
     FMOD::System *system;
     FMOD::Sound *sound;
-    FMOD::Channel *channel = 0;
-    unsigned int version;
-    void *extradriverdata = 0;
+    FMOD::System_Create(&system);
 
-    FMOD_RESULT result = FMOD::System_Create(&system);
-    result = system -> getVersion(&version);
-
-    result = system -> init(32, FMOD_INIT_NORMAL, extradriverdata);
-
-    result = system -> createStream(MEDIAPATH, FMOD_LOOP_NORMAL | FMOD_2D, 0, &sound);
-
-    result = system -> playSound(sound, 0, false, &channel);
+    qPlay(MEDIAPATH, *system, *sound); 
 
     sleep(10);
 
-    // QUITING
-    result = sound -> release();
-    result = system -> close();
-    result = system -> release();
+    qStop(*system, *sound);
 
     return 0;
 }
