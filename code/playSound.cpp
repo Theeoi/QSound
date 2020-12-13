@@ -1,9 +1,14 @@
 //#include "fmod.hpp"
+#include <iostream>
+#include <unistd.h>
 
 #include "playSound.h"
 
-void qPlay(const char* mediaPath, FMOD::System *system, FMOD::Sound *sound) {
-    
+void qPlay(const char* mediaPath, int playTime) {
+
+    FMOD::System *system;
+    FMOD::Sound *sound;
+    FMOD::System_Create(&system);
     FMOD::Channel *channel = 0;
     unsigned int version;
     void *extradriverdata = 0;
@@ -16,9 +21,8 @@ void qPlay(const char* mediaPath, FMOD::System *system, FMOD::Sound *sound) {
 
     system -> playSound(sound, 0, false, &channel);
 
-}
-
-void qStop(FMOD::System *system, FMOD::Sound *sound) {
+    std::cout << "Playing " << mediaPath << " for " << playTime << " seconds.\n";
+    sleep(playTime);
 
     sound -> release();
     system -> close();

@@ -3,9 +3,7 @@
 
 #include "fmod.hpp"
 
-void qPlay(const char*, FMOD::System, FMOD::Sound);
-
-void qStop(FMOD::System, FMOD::Sound);
+void qPlay(const char*, int);
 
 
 

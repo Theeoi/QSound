@@ -1,5 +1,4 @@
 #include <iostream>
-#include <unistd.h>
 
 //#include "fmod.hpp"
 
@@ -8,16 +7,9 @@
 int main() {
 
     const char* MEDIAPATH = "../resources/mp3/rule_brittania.mp3";
+    int playTime = 10; // Seconds of play
 
-    FMOD::System *system;
-    FMOD::Sound *sound;
-    FMOD::System_Create(&system);
-
-    qPlay(MEDIAPATH, *system, *sound); 
-
-    sleep(10);
-
-    qStop(*system, *sound);
+    qPlay(MEDIAPATH, playTime); 
 
     return 0;
 }
