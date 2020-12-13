@@ -3,7 +3,7 @@
 
 #include "fmod.hpp"
 
-void qPlay(const char*, int);
+void qPlay(const char*);
 
 
 

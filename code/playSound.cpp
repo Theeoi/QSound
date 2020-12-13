@@ -1,10 +1,11 @@
 //#include "fmod.hpp"
 #include <iostream>
 #include <unistd.h>
+#include <curses.h>
 
 #include "playSound.h"
 
-void qPlay(const char* mediaPath, int playTime) {
+void qPlay(const char* mediaPath) {
 
     FMOD::System *system;
     FMOD::Sound *sound;
@@ -21,12 +22,22 @@ void qPlay(const char* mediaPath, int playTime) {
 
     system -> playSound(sound, 0, false, &channel);
 
-    std::cout << "Playing " << mediaPath << " for " << playTime << " seconds.\n";
-    sleep(playTime);
+    std::cout << "Playing " << mediaPath << std::endl;
+    
+    initscr();
+    cbreak();
+    noecho();
 
-    sound -> release();
-    system -> close();
-    system -> release();
+    std::cout << "Press 's' to stop.\n";
+    int key_press = getch();
+    if (key_press == 's') {
+        sound -> release();
+        system -> close();
+        system -> release();
+
+        getch();
+        return;
+    }
 
 }
 
