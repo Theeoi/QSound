@@ -4,4 +4,4 @@ Creating a (hopefully) less wonky version of 'Multiplay' for theater productions
 By: Theodor Blom
 
 Sound is played using FMOD.
-Compile with ">$ g++ qsound.cpp [other files].cpp -o [exec-name] -L. -lfmod -lfmodL"
+Compile with ">$ g++ qsound.cpp [other files].cpp -o [exec-name] -L. -lfmod -lfmodL -lncurses"
