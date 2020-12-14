@@ -1,5 +1,6 @@
 //#include "fmod.hpp"
 #include <iostream>
+#include <string>
 #include <unistd.h>
 #include <curses.h>
 
@@ -22,23 +23,39 @@ void qPlay(const char* mediaPath) {
 
     system -> playSound(sound, 0, false, &channel);
 
-    std::cout << "Playing " << mediaPath << std::endl;
-    
+    // Initialize ncurses (user input) 
     initscr();
     cbreak();
     noecho();
 
-    std::cout << "Press 's' to stop.\n";
-    int key_press = getch();
-    if (key_press == 's') {
-        sound -> release();
-        system -> close();
-        system -> release();
+    // Creating window!
+    int yMax, xMax;
+    getmaxyx(stdscr, yMax, xMax);
 
-        getch();
-        return;
+    WINDOW* inputwin = newwin(3, xMax-12, yMax-5, 5);
+    box(inputwin, 0, 0);
+    refresh();
+    wrefresh(inputwin); 
+   
+    // Playing!
+    std::string playing("Playing: " + std::string(mediaPath));  
+    mvwprintw(inputwin, 1, 1, playing.c_str());
+    mvwprintw(inputwin, 1, 95, "Press 's' to stop.");
+    while (1) { // While loop stops other button presses.
+        int key_press = wgetch(inputwin);
+        if (key_press == 's') {
+            sound -> release();
+            system -> close();
+            system -> release();
+
+            getch();
+            endwin();
+
+            return;
+        }
+        else
+            continue;
     }
-
 }
 
 
