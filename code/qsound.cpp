@@ -6,7 +6,7 @@
 
 int main() {
 
-    const char* MEDIAPATH = "../resources/mp3/rule_brittania.mp3";
+    const char* MEDIAPATH = "resources/mp3/rule_brittania.mp3";
 
     qPlay(MEDIAPATH); 
 
