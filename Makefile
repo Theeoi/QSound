@@ -6,7 +6,7 @@ LIBS=-lfmod -lfmodL -lncurses
 _DEPS = playSound.h
 DEPS = $(patsubst %,$(CDIR)/%,$(_DEPS))
 
-_OBJ = qsound.o playSound.o
+_OBJ = qSound.o playSound.o
 OBJ = $(patsubst %,$(CDIR)/%,$(_OBJ))
 
 $(CDIR)/%.o: %.cpp $(DEPS)
