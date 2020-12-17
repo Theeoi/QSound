@@ -3,10 +3,10 @@ CC=g++
 CFLAGS=-L$(CDIR)
 LIBS=-lfmod -lfmodL -lncurses
 
-_DEPS = playSound.h
+_DEPS = sound.h
 DEPS = $(patsubst %,$(CDIR)/%,$(_DEPS))
 
-_OBJ = qSound.o playSound.o
+_OBJ = qSound.o sound.o
 OBJ = $(patsubst %,$(CDIR)/%,$(_OBJ))
 
 $(CDIR)/%.o: %.cpp $(DEPS)
