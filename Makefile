@@ -1,7 +1,7 @@
 CDIR=code
 CC=g++
 CFLAGS=-L$(CDIR)
-LIBS=-lfmod -lfmodL -lncurses
+LIBS=-lfmod -lfmodL
 
 _DEPS = sound.h
 DEPS = $(patsubst %,$(CDIR)/%,$(_DEPS))
