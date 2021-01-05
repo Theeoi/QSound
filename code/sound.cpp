@@ -16,17 +16,20 @@ void soundPlay(const char* mediaPath) {
 
     system -> init(32, FMOD_INIT_NORMAL, extradriverdata);
 
-    system -> createStream(mediaPath, FMOD_LOOP_NORMAL | FMOD_2D, 0, &sound);
-    sound -> setMode(FMOD_LOOP_OFF); // ONLY PLAY ONCE
+    system -> createStream(mediaPath, FMOD_LOOP_OFF | FMOD_2D, 0, &sound);
 
     system -> playSound(sound, 0, false, &channel);
 
-    std::string playing("Playing: " + std::string(mediaPath));
-    std::cout << playing << std::endl;
+    std::cout << "Playing: " << mediaPath << std::endl;
+    
+    bool playing = false;
+    do {
+        channel -> isPlaying(&playing);
+    } while (playing == true);
 
     sound -> release();
     system -> close();
-    system -> release(); 
+    system -> release();
 
 }
 
