@@ -21,7 +21,7 @@ int main() {
     refresh();
     wrefresh(mainwin); 
    
-    const char* MEDIAPATH = "resources/mp3/rule-brittania.mp3";
+    const char* MEDIAPATH = "resources/wav/wilhelm-scream.wav";
 
     soundPlay(MEDIAPATH, mainwin); 
 
