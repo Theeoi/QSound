@@ -1,12 +1,17 @@
-#include <iostream>
+#include <QApplication>
 
 #include "sound.h"
+#include "window.h"
 
-int main() {
+int main(int argc, char *argv[]) {
 
-    const char* MEDIAPATH = "resources/wav/wilhelm-scream.wav";
+    QApplication app(argc, argv);
+    MainWindow window;
+    window.show();
 
-    soundPlay(MEDIAPATH); 
+    //const char* MEDIAPATH = "resources/wav/wilhelm-scream.wav";
 
-    return 0;
+    //soundPlay(MEDIAPATH); 
+
+    return app.exec();
 }
