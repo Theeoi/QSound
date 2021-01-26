@@ -2,23 +2,30 @@
 #define qSound_WINDOW
 
 #include <QMainWindow>
-#include <QLabel>
 #include <QVariant>
 #include <QVector>
 #include <QAbstractItemModel>
 #include <QModelIndex>
 #include <QTreeView>
+#include <QVBoxLayout>
 
 class MainWindow : public QMainWindow { // QT Menu example
     Q_OBJECT
 
     public:
-        MainWindow();
+        MainWindow(QWidget *parent = nullptr);
+
+        QWidget *mainWidget; 
+        QVBoxLayout *vboxLayout;
+        QTreeView *trackTree;
 
     protected:
         #ifndef QT_NO_CONTEXTMENU
             void contextMenuEvent(QContextMenuEvent *event) override;
         #endif
+
+    public slots:
+        void updateActions();
     
     private slots:
         void newShow();
@@ -42,9 +49,7 @@ class MainWindow : public QMainWindow { // QT Menu example
         QAction *addAct;
         QAction *removeAct;
         QAction *aboutAct;
-        QLabel *infoLabel;
 
-        QTreeView *trackTree;
         QString trackPath;
 };
 
@@ -60,8 +65,11 @@ class TreeItem {
         int childCount() const;
         int columnCount() const;
         QVariant data(int column) const;
+        bool insertChildren(int position, int count, int columns);
         int row() const;
-        TreeItem *parentItem();
+        TreeItem *parent();
+        bool removeChildren(int position, int count);
+        bool setData(int column, const QVariant &value);
 
     private:
         QVector<TreeItem*> m_childItems;
@@ -73,19 +81,24 @@ class TreeModel : public QAbstractItemModel {
     Q_OBJECT
 
     public:
-        explicit TreeModel(const QString &data, QObject *parent = nullptr);
+        explicit TreeModel(const QStringList &headers, const QString &data, QObject *parent = nullptr);
         ~TreeModel();
 
         QVariant data(const QModelIndex &index, int role) const override;
-        Qt::ItemFlags flags(const QModelIndex &index) const override;
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
         QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
         QModelIndex parent(const QModelIndex &index) const override;
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
+        Qt::ItemFlags flags(const QModelIndex &index) const override;
+        bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+        bool insertRows(int position, int rows, const QModelIndex &parent = QModelIndex()) override;
+        bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) override;
+
     private:
         void setupModelData(const QStringList &lines, TreeItem *parent);
+        TreeItem *getItem(const QModelIndex &index) const;
 
         TreeItem *rootItem;
 };

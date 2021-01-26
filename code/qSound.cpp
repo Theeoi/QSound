@@ -1,6 +1,4 @@
 #include <QApplication>
-#include <QFile>
-#include <QTreeView>
 
 #include "sound.h"
 #include "window.h"
