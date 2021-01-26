@@ -7,6 +7,7 @@
 #include <QVector>
 #include <QAbstractItemModel>
 #include <QModelIndex>
+#include <QTreeView>
 
 class MainWindow : public QMainWindow { // QT Menu example
     Q_OBJECT
@@ -43,6 +44,7 @@ class MainWindow : public QMainWindow { // QT Menu example
         QAction *aboutAct;
         QLabel *infoLabel;
 
+        QTreeView *trackTree;
         QString trackPath;
 };
 

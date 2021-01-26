@@ -4,34 +4,19 @@
 
 #include "window.h"
 
-MainWindow::MainWindow() {
-    QWidget *widget = new QWidget;
-    setCentralWidget(widget);
+MainWindow::MainWindow() : trackTree(new QTreeView) {
+    setCentralWidget(trackTree);
 
-    QWidget *topFiller = new QWidget;
-    topFiller -> setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    QFile file("./saves/default.txt");
+    file.open(QIODevice::ReadOnly);
+    TreeModel *model = new TreeModel(file.readAll());
+    file.close();
 
-    //infoLabel = new QLabel(tr("<i>This is just a temporary label</i>"));
-
-    //infoLabel -> setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
-    //infoLabel -> setAlignment(Qt::AlignCenter);
-
-    QWidget *bottomFiller = new QWidget;
-    bottomFiller -> setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout -> setContentsMargins(5, 5, 5, 5);
-    layout -> addWidget(topFiller);
-    //layout -> addWidget(view);
-    layout -> addWidget(bottomFiller);
-    widget -> setLayout(layout);
+    trackTree -> setModel(model);
 
     createActions();
     createMenus();
     
-    //QString message = tr("This is a message for the user!");
-    //statusBar() -> showMessage(message);
-
     setWindowTitle(tr("qSound"));
     setMinimumSize(250, 190);
     resize(500, 380);
@@ -47,15 +32,15 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event) {
 #endif
 
 void MainWindow::newShow() {
-    //infoLabel -> setText(tr("Invoked <b>File|New Show</b>"));
+
 }
 
 void MainWindow::openShow() {
-    //infoLabel -> setText(tr("Invoked <b>File|Open Show</b>"));
+
 }
 
 void MainWindow::saveShow() {
-    //infoLabel -> setText(tr("Invoked <b>File|Save Show</b>"));
+
 }
 
 // Taken from simpledommodel
@@ -69,11 +54,10 @@ void MainWindow::addTrack() {
 }
     
 void MainWindow::removeTrack() {
-    //infoLabel -> setText(tr("Invoked <b>Track|Remove Track</b>"));
+
 }
 
 void MainWindow::about() {
-    //infoLabel -> setText(tr("Invoked <b>Help|About</b>"));
     QMessageBox::about(this, tr("About qSound"), 
             tr("A sound player for theater productions. Created by: Theodor Blom"));
 }
