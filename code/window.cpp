@@ -1,5 +1,6 @@
 #include <QtWidgets>
 #include <QFileDialog>
+#include <QFile>
 #include <QStringList>
 
 #include "window.h"
@@ -10,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     vboxLayout = new QVBoxLayout(mainWidget);
     vboxLayout -> setSpacing(0);
     vboxLayout -> setContentsMargins(0, 0, 0, 0);
+
+    statusbar = new QStatusBar(this);
+    setStatusBar(statusbar);
 
     trackTree = new QTreeView(mainWidget);
     trackTree -> setAlternatingRowColors(true);
@@ -28,9 +32,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setMinimumSize(250, 190);
     resize(500, 380);
 
-    const QStringList headers({tr("Track No."), tr("Name"), tr("Full Path")});
+    const QStringList headers({tr("Track No."), tr("Name")});
 
-    QFile file("./saves/test.txt");
+    QFile file("saves/test.txt");
     file.open(QIODevice::ReadOnly);
     TreeModel *model = new TreeModel(headers, file.readAll());
     file.close();
@@ -39,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     for (int column = 0; column < model -> columnCount(); ++column)
         trackTree -> resizeColumnToContents(column);
 
+    updateActions();
 }
 
 #ifndef QT_NO_CONTEXTMENU
@@ -64,12 +69,11 @@ void MainWindow::saveShow() {
 
 // Taken from simpledommodel
 void MainWindow::addTrack() {
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Select Track"), 
-            trackPath, tr("WAV files (*.wav);;MP3 files (*.mp3)"));
-
-    if (!filePath.isEmpty()) {
-        trackPath = filePath;
-    }
+    //QString filePath = QFileDialog::getOpenFileName(this, tr("Select Track"), 
+    //        trackPath, tr("WAV files (*.wav);;MP3 files (*.mp3)"));
+    //if (!filePath.isEmpty()) {
+    //    trackPath = filePath;
+    //}
 
     const QModelIndex index = trackTree -> selectionModel() -> currentIndex();
     QAbstractItemModel *model = trackTree -> model();
@@ -148,11 +152,21 @@ void MainWindow::createMenus() {
 }
 
 void MainWindow::updateActions() {
-    const bool hasSelection = !trackTree -> selectionModel() -> selection().isEmpty();
-    removeAct -> setEnabled(hasSelection);
+    //const bool hasSelection = !trackTree -> selectionModel() -> selection().isEmpty();
+    //removeAct -> setEnabled(hasSelection);
 
     const bool hasCurrent = trackTree -> selectionModel() -> currentIndex().isValid();
-    addAct -> setEnabled(hasCurrent);
+    //addAct -> setEnabled(hasCurrent);
+    
+    if (hasCurrent) {
+        trackTree -> closePersistentEditor(trackTree -> selectionModel() -> currentIndex());
+
+        const int row = trackTree -> selectionModel() -> currentIndex().row();
+        if (trackTree -> selectionModel() -> currentIndex().parent().isValid())
+            statusBar() -> showMessage(tr("Position: %1").arg(row));
+        else
+            statusBar() -> showMessage(tr("Position: %1 in top level").arg(row));
+    }
 }
 
 // ------ TreeItem Class --------
@@ -205,7 +219,7 @@ TreeItem *TreeItem::parent() {
     return m_parentItem;
 }
 
-int TreeItem::row() const {
+int TreeItem::childNumber() const {
     if (m_parentItem)
         return m_parentItem -> m_childItems.indexOf(const_cast<TreeItem*>(this));
 
@@ -279,7 +293,7 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const {
     if (parentItem == rootItem || !parentItem)
         return QModelIndex();
 
-    return createIndex(parentItem -> row(), 0, parentItem);
+    return createIndex(parentItem -> childNumber(), 0, parentItem);
 }
 
 int TreeModel::rowCount(const QModelIndex &parent) const {
@@ -362,7 +376,7 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent) {
     QVector<int> indentations;
     parents << parent;
     indentations << 0;
-
+    
     int number = 0;
 
     while (number < lines.count()) {
@@ -370,7 +384,7 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent) {
         while (position < lines[number].length()) {
             if (lines[number].at(position) != ' ')
                 break;
-            position++;
+            ++position;
         }
 
         const QString lineData = lines[number].mid(position).trimmed();
@@ -400,7 +414,10 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent) {
             }
 
             // Append a new item to the current parent's list of children.
-            parents.last()->appendChild(new TreeItem(columnData, parents.last()));
+            TreeItem *parent = parents.last();
+            parent -> insertChildren(parent -> childCount(), 1, rootItem -> columnCount());
+            for (int column = 0; column < columnData.size(); ++column)
+                parent -> child(parent -> childCount() - 1) -> setData(column, columnData[column]);
         }
         ++number;
     }

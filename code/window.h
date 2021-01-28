@@ -17,7 +17,12 @@ class MainWindow : public QMainWindow { // QT Menu example
 
         QWidget *mainWidget; 
         QVBoxLayout *vboxLayout;
+        QStatusBar *statusbar;
         QTreeView *trackTree;
+
+        QMenu *trackMenu;
+        QAction *addAct;
+        QAction *removeAct;
 
     protected:
         #ifndef QT_NO_CONTEXTMENU
@@ -40,14 +45,11 @@ class MainWindow : public QMainWindow { // QT Menu example
         void createMenus();
 
         QMenu *fileMenu;
-        QMenu *trackMenu;
         QMenu *helpMenu;
         QAction *newAct;
         QAction *openAct;
         QAction *saveAct;
         QAction *exitAct;
-        QAction *addAct;
-        QAction *removeAct;
         QAction *aboutAct;
 
         QString trackPath;
@@ -56,7 +58,7 @@ class MainWindow : public QMainWindow { // QT Menu example
 // Taken from simpletreemodel
 class TreeItem {
     public:
-        explicit TreeItem(const QVector<QVariant> &data, TreeItem *parentItem = nullptr);
+        explicit TreeItem(const QVector<QVariant> &data, TreeItem *parent = nullptr);
         ~TreeItem();
 
         void appendChild(TreeItem *child);
@@ -66,7 +68,7 @@ class TreeItem {
         int columnCount() const;
         QVariant data(int column) const;
         bool insertChildren(int position, int count, int columns);
-        int row() const;
+        int childNumber() const;
         TreeItem *parent();
         bool removeChildren(int position, int count);
         bool setData(int column, const QVariant &value);
