@@ -1,36 +1,26 @@
-#include <iostream>
+#include <QApplication>
 
 #include "sound.h"
+#include "window.h"
 
-int main() {
+int main(int argc, char *argv[]) {
 
-    // Initialize ncurses (window) 
-    initscr();
-    cbreak();
-    noecho();
+    QApplication app(argc, argv);
+    MainWindow window;
+    window.show();
 
-    // Creating main window!
-    int yMax, xMax;
-    getmaxyx(stdscr, yMax, xMax);
-    int winHeight, winWidth;
-    winHeight = yMax;
-    winWidth = xMax - 2;
+    //const char* MEDIAPATH = "resources/wav/wilhelm-scream.wav";
 
+<<<<<<< HEAD
     WINDOW* mainwin = newwin(winHeight, winWidth, (LINES - winHeight)/2, (COLS - winWidth)/2);
     box(mainwin, 0, 0);
     refresh();
     wrefresh(mainwin); 
    
     const char* MEDIAPATH = "resources/wav/wilhelm-scream.wav";
+=======
+    //soundPlay(MEDIAPATH); 
+>>>>>>> tryQt
 
-    soundPlay(MEDIAPATH, mainwin); 
-
-    // Deallocate main window
-    wborder(mainwin, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
-    wrefresh(mainwin);
-    delwin(mainwin);
-
-    endwin(); // End ncurses
-
-    return 0;
+    return app.exec();
 }
